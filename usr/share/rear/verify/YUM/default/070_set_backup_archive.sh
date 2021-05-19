@@ -1,1 +1,1 @@
-../prep/070_set_backup_archive.sh
+../../../prep/YUM/default/070_set_backup_archive.sh
