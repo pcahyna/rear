@@ -1,1 +1,1 @@
-../../../backup/NETFS/default/980_umount_NETFS_dir.sh
+../../NETFS/default/980_umount_NETFS_dir.sh

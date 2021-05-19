@@ -1,1 +1,1 @@
-../../../backup/NETFS/default/100_mount_NETFS_path.sh
+../../NETFS/default/060_mount_NETFS_path.sh
