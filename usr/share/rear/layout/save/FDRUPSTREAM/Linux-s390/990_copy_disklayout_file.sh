@@ -18,8 +18,11 @@
 scheme=$( url_scheme $OUTPUT_URL )
 host=$( url_host $OUTPUT_URL )
 path=$( url_path $OUTPUT_URL )
-opath=$( output_path $scheme $path )
 
+# if filesystem access to url is unsupported return silently (e.g. scheme tape)
+scheme_supports_filesystem $scheme || return 0
+
+local opath=$( output_path $scheme $path )
 
 if [[ "$ZVM_NAMING" == "Y" && "$ARCH" == "Linux-s390" ]] ; then 
       VM_UID=$(vmcp q userid |awk '{ print $1 }')
