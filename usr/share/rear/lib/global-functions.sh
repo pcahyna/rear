@@ -641,7 +641,7 @@ function umount_url() {
     local mountpoint=$2
     local scheme
 
-    scheme=$(url_scheme $url)
+    scheme=$( url_scheme $url )
 
     # The cases where we return 0 are those that do not need umount and also do not need ExitTask handling.
     # They thus need to be kept in sync with mount_url() so that RemoveExitTasks is used
