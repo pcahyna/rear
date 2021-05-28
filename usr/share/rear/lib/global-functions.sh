@@ -418,7 +418,7 @@ function output_path() {
     # The caller needs to check the URL/scheme using scheme_supports_filesystem()
     # before calling this function.
     scheme_supports_filesystem $scheme || BugError "output_path() called with scheme $scheme that does not support filesystem access"
-        
+
     case $scheme in
        (file)  # type file needs a local path (must be mounted by user)
            path="$path/${OUTPUT_PREFIX}"
