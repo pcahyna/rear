@@ -11,7 +11,7 @@ local scheme=$( url_scheme $OUTPUT_URL )
 local host=$( url_host $OUTPUT_URL )
 local path=$( url_path $OUTPUT_URL )
 
-# XXX should we check for empty $OUTPUT_URL here? Most likely plenty of things got broken before reaching this point if it is empty
+# TODO should we check for empty $OUTPUT_URL here? Most likely plenty of things got broken before reaching this point if it is empty
 if [ -z "$OUTPUT_URL" ] || ! scheme_accepts_files $scheme ; then
     if [ "$scheme" == "null" ] ; then
         # There are result files to copy, but OUTPUT_URL=null indicates that we are not interested in them
