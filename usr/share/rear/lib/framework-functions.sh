@@ -122,7 +122,7 @@ function cleanup_build_area_and_end_program () {
     # Cleanup build area
     Log "Finished in $((SECONDS-STARTTIME)) seconds"
     if is_true "$KEEP_BUILD_DIR" ; then
-        LogPrint "You should also rm -Rf $BUILD_DIR"
+        LogPrint "You should also rm -Rf --one-file-system $BUILD_DIR"
     else
         Log "Removing build area $BUILD_DIR"
         rm -Rf $TMP_DIR
