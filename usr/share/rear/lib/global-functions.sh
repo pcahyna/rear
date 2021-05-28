@@ -343,7 +343,6 @@ function url_path() {
 }
 
 ### Returns true if one can upload files to the URL
-
 function scheme_accepts_files() {
     local scheme=$1
     case $scheme in
