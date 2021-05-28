@@ -368,7 +368,6 @@ function scheme_accepts_files() {
 ### to upload files to the destination instead of just "cp" or other direct filesystem access.
 ### Returning true does not imply that the URL is currently mounted at a filesystem and usable,
 ### only that it can be mounted (use mount_url() first)
-
 function scheme_supports_filesystem() {
     local scheme=$1
     case $scheme in
