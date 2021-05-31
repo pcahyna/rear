@@ -620,7 +620,7 @@ function mount_url() {
     esac
 
     # create mount point
-    mkdir -p $v "$mountpoint" >&2 || Error "Could not mkdir '$mountpoint'"
+    mkdir -p $v "$mountpoint" || Error "Could not mkdir '$mountpoint'"
     AddExitTask "remove_temporary_mountpoint '$mountpoint'"
 
     Log "Mounting with '$mount_cmd'"
@@ -632,7 +632,7 @@ function mount_url() {
 }
 
 function remove_temporary_mountpoint() {
-    rmdir $v "$1" >&2
+    rmdir $v "$1"
 }
 
 ### Unmount url $1 at mountpoint $2, perform mountpoint cleanup and exit task + error handling
