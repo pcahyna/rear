@@ -8,7 +8,7 @@ if grep -q -- "--relative" <<< "${BACKUP_RSYNC_OPTIONS[*]}" ; then
     BACKUP_RSYNC_OPTIONS=( $( RmInArray "--relative" "${BACKUP_RSYNC_OPTIONS[@]}" ) )
     Log "Removed option '--relative' from the BACKUP_RSYNC_OPTIONS array during $WORKFLOW workflow"
 fi
-if grep -q -- "-R" <<< "${BACKUP_RSYNC_OPTIONS[@]}" ; then
+if grep -q -- "-R" <<< "${BACKUP_RSYNC_OPTIONS[*]}" ; then
     BACKUP_RSYNC_OPTIONS=( $( RmInArray "-R" "${BACKUP_RSYNC_OPTIONS[@]}" ) )
     Log "Removed option '-R' from the BACKUP_RSYNC_OPTIONS array during $WORKFLOW workflow"
 fi
