@@ -84,7 +84,7 @@ To make CentOS v8.0 work the following line was needed:
 == Test Matrix
 
 .Test Matrix
-[%header,format=csv]
+[options="header",format="csv"]
 |===
 Operating System,DHCP,Static IP,Virtual,Physical,LVM Root Disk,Plain Root Disk,EXT3,EXT4,XFS,BTRFS,Original Cluster,Replication Cluster
 CentOS 7.3,,pass,Pass,,Pass,,,,Pass,,Pass,
