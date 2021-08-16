@@ -771,7 +771,10 @@ function is_multipath_path {
     # so that no "multipath -l" output could clutter the log (the "multipath -l" output is irrelevant here)
     # in contrast to e.g. test "$( multipath -l )" that would falsely succeed with blank output
     # and the output would appear in the log in 'set -x' debugscript mode:
-    multipath -l | grep -q '[[:alnum:]]' || return 1
+    #
+    # Unfortunately, multipat -l is quite slow with many multipath devices
+    # and becomes a performance bottleneck, so we must comment it out for now.
+    #multipath -l | grep -q '[[:alnum:]]' || return 1
     # Check if a block device should be a path in a multipath device:
     multipath -c /dev/$1 &>/dev/null
 }
