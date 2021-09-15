@@ -68,9 +68,9 @@ create_lvmgrp() {
     local vg=${vgrp#/dev/}
 
     cat >> "$LAYOUT_CODE" <<EOF
-create_volume_group=1
-create_logical_volumes=1
-create_thin_volumes_only=0
+create_volume_group+=( "$vg" )
+create_logical_volumes+=( "$vg" )
+create_thin_volumes_only=( \$( RmInArray "$vg" "\${create_thin_volumes_only[@]}" ) )
 
 EOF
 
@@ -97,8 +97,8 @@ if lvm vgcfgrestore -f "$VAR_DIR/layout/lvm/${vg}.cfg" $vg >&2 ; then
 
     LogPrint "Sleeping 3 seconds to let udev or systemd-udevd create their devices..."
     sleep 3 >&2
-    create_volume_group=0
-    create_logical_volumes=0
+    create_volume_group=( \$( RmInArray "$vg" "\${create_volume_group[@]}" ) )
+    create_logical_volumes=( \$( RmInArray "$vg" "\${create_logical_volumes[@]}" ) )
 
 EOF
         if is_true "${FORCE_VGCFGRESTORE-no}"; then
@@ -124,8 +124,8 @@ elif lvm vgcfgrestore --force -f "$VAR_DIR/layout/lvm/${vg}.cfg" $vg >&2 ; then
     sleep 3 >&2
 
     # All logical volumes have been created, except Thin volumes and pools
-    create_volume_group=0
-    create_thin_volumes_only=1
+    create_volume_group=( \$( RmInArray "$vg" "\${create_volume_group[@]}" ) )
+    create_thin_volumes_only+=( "$vg" )
  
 EOF
         fi
@@ -144,7 +144,7 @@ EOF
     local -a devices=($(awk "\$1 == \"lvmdev\" && \$2 == \"$vgrp\" { print \$3 }" "$LAYOUT_FILE"))
 
 cat >> "$LAYOUT_CODE" <<EOF
-if [ \$create_volume_group -eq 1 ] ; then
+if IsInArray $vg "\${create_volume_group[@]}" ; then
     LogPrint "Creating LVM VG '$vg'; Warning: some properties may not be preserved..."
     if [ -e "$vgrp" ] ; then
         rm -rf "$vgrp"
@@ -246,9 +246,9 @@ create_lvmvol() {
     local warnraidline
 
     if [ $is_thin -eq 0 ] ; then
-        ifline="if [ \"\$create_logical_volumes\" -eq 1 ] && [ \"\$create_thin_volumes_only\" -eq 0 ] ; then"
+        ifline="if IsInArray $vg \"\${create_logical_volumes[@]}\" && ! \$IsInArray $vg \"\${create_thin_volumes_only[@]}\" ; then"
     else
-        ifline="if [ \"\$create_logical_volumes\" -eq 1 ] ; then"
+        ifline="if IsInArray $vg \"\${create_logical_volumes[@]}\" ; then"
     fi
 
     if [ $is_raidunknown -eq 1 ]; then
