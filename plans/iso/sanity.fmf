@@ -1,0 +1,9 @@
+summary:
+    Sanity tests
+
+framework: beakerlib
+
+discover:
+    how: fmf
+    url: https://github.com/antonvoznia/rear-testing
+    ref: test-backup-iso
