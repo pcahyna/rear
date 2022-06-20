@@ -17,7 +17,7 @@ case $proto in
 		;;
 
 	(rsync)
-		# This must run before the backup stage. Otherwise --relative gets added to BACKUP_RSYNC_OPTIONS,
+		# This must run before the backup stage. Otherwise --relative gets added to BACKUP_RSYNC_OPTIONS
 		$BACKUP_PROG -a $v -r "${TMP_DIR}/rsync/${RSYNC_PREFIX}" "${BACKUP_RSYNC_OPTIONS[@]}" "$(rsync_remote "$OUTPUT_URL")/" >/dev/null \
                     || Error "Could not create '$(rsync_path_full "$OUTPUT_URL")' on remote ${host}"
 		;;
