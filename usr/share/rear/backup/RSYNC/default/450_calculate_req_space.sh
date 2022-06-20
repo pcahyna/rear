@@ -23,7 +23,7 @@ case $proto in
     (ssh)
         LogPrint "Calculating size of ${host}:${path}"
         ssh $(rsync_remote_ssh "$BACKUP_URL") "df -P ${path}" >$TMP_DIR/rs_size
-        StopIfError "Failed to determine size of $RSYNC_PATH"
+        StopIfError "Failed to determine size of ${path}"
         _div=1 # 1024-blocks
         grep -q "512-blocks" $TMP_DIR/rs_size && _div=2 # HPUX: divide with 2 to get kB size
         _remote_size=$( tail -n 1 $TMP_DIR/rs_size | awk '{print $2}' )
