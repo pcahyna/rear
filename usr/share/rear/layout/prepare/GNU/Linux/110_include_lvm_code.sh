@@ -263,7 +263,7 @@ $ifline
 
     LogPrint "Creating LVM volume '$vg/$lvname'; Warning: some properties may not be preserved..."
     $warnraidline
-    lvm lvcreate $lvopts $vg <<<y
+    lvm lvcreate -y $lvopts $vg
 
 fi
 EOF
