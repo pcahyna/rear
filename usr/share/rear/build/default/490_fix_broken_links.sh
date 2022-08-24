@@ -7,6 +7,23 @@
 # see https://github.com/rear/rear/issues/1638
 # and https://github.com/rear/rear/pull/1734
 
+# Some broken symlinks are expected. The 'build' and 'source' symlinks in kernel modules point to kernel sources
+# and are broken untol one installs the kernel-debug-devel or kernel-devel packages (on Fedora) and even then
+# the targets are jot included in the rescue system by default.
+# Do not warn about those, it is just noise.
+local irrelevant_symlinks=( '*/lib/modules/*/build' '*/lib/modules/*/source' )
+function symlink_is_irrelevant () {
+    for i in "${irrelevant_symlinks[@]}"; do
+        # do not quote $i, it is a glob pattern, matching will be performed by [[ ... == ... ]]
+        # quoting inside [[ ]] prevents pattern matching
+        if [[ "$1" == $i ]]; then
+            return 0
+        fi
+    done
+    return 1
+}
+
+
 # FIXME: The following code fails if symlinks or their targets contain characters from IFS (e.g. blanks),
 # cf. the same kind of comments in build/default/990_verify_rootfs.sh
 # and layout/prepare/GNU/Linux/130_include_mount_subvolumes_code.sh
@@ -38,6 +55,10 @@ pushd $ROOTFS_DIR
     local broken_symlink=''
     local link_target=''
     for broken_symlink in $broken_symlinks ; do
+        if symlink_is_irrelevant "$broken_symlink" ; then
+            DebugPrint "Ignoring irrelevant broken symlink $broken_symlink"
+            continue
+        fi
         # For each broken symlink absolute path inside ROOTFS_DIR
         # we call "readlink -e" in the original system to get its link target there.
         # If in the original system there was a chain of symbolic links like
