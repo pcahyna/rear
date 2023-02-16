@@ -382,7 +382,7 @@ Log "Saving disks and their partitions"
                 # ECKD or FBA
                 dasdtype=$( lsdasd | awk "\$3 == \"$blockd\" { print \$5}" )
                 if [ "$dasdtype" != ECKD ] && [ "$dasdtype" != FBA ]; then
-                    LogPrint "Type $dasdtype of DASD $blockd unexpected: neither EKCD nor FBA"
+                    LogPrint "Type $dasdtype of DASD $blockd unexpected: neither ECKD nor FBA"
                 fi
 
                 echo "# every DASD bus and channel"
