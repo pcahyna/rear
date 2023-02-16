@@ -24,6 +24,7 @@ fi
 ### Prepare a disk for partitioning/general usage.
 create_disk() {
     local component disk size label junk
+    local blocksize layout dasdtype dasdcyls junk2
     read component disk size label junk < <(grep "^disk $1 " "$LAYOUT_FILE")
 
     ### Disks should be block devices.
@@ -67,7 +68,8 @@ sync
 
 EOF
 
-    create_partitions "$disk" "$label"
+    # $junk can contain useful DASD-specific fields
+    create_partitions "$disk" "$label" "$junk"
 
     cat >> "$LAYOUT_CODE" <<EOF
 # Make sure device nodes are visible (eg. in RHEL4)
@@ -93,6 +95,11 @@ create_partitions() {
     ### List partition types/names to detect disk label type.
     local -a names=()
     local part disk size pstart name junk
+    local orig_block_size layout dasdtype dasdcyls junk2
+    if [ "$label" == dasd ]; then
+        # dasd has more fields - junk is not junk anymore
+        read orig_block_size layout dasdtype dasdcyls junk2 <<<$3
+    fi
     while read part disk size pstart name junk ; do
         names+=( $name )
         case $name in
@@ -227,10 +234,12 @@ EOF
             if [[ "$end" ]] ; then
                 end=$( mathlib_calculate "$end - 1" )
             fi
-            if [[ "$ARCH" == "Linux-s390" ]] ; then
-                # if dasd disk is LDL formated, then do not partition it, because it is partitioned and can take only partition
-                if [[ ! "${listDasdLdl[@]}" =~ "$device" ]] ; then
-                    echo "not LDL dasd formated disk, create a partition"
+            if [[ "$ARCH" == "Linux-s390" && "$label" == dasd ]] ; then
+                # LDL formatted disks are already partitioned and should not be partitioned with parted or fdasd , it will fail
+                if [ "$layout" == LDL ]; then
+                    Debug "$device: LDL formatted DASD, do not create a partition"
+                else
+                    Debug "$device: ${layout} formatted DASD, create a partition"
                     cat >> "$LAYOUT_CODE" <<EOF
 create_disk_partition "$device" "$name" $number $start $end
 EOF

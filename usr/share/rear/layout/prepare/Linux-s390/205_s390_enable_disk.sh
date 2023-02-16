@@ -2,45 +2,29 @@
 # Before we can compare or map DASD devices we must enable them.
 # This operation is only needed during "rear recover".
 
-format_s390_disk() {
-    LogPrint "run dasdfmt"
-    while read line ; do
-        LogPrint 'dasdfmt:' "$line"
-        # example format command: dasdfmt -b 4096 -d cdl -y /dev/dasda
-        # where
-        #  b is the block size
-        #  d is the layout: 
-        #   cdl - compatible disk layout (can be shared with zos and zvm apps)
-        #   ldl - linux disk layout
-        #  y - answer yes
-        device=$( echo $line | awk '{ print $7 }' )
-        blocksize=$( echo $line | awk '{ print $3 }' )
-        layout=$( echo $line | awk '{ print tolower($5) }' )
-        if [[ "$layout" == "ldl" ]] ; then
-            # listDasdLdl contains devices such as /dev/dasdb that are formatted as LDL
-            # LDL formatted disks are already partitioned and should not be partitioned with parted or fdasd , it will fail
-            # this var, listDasdLdl, is used by 100_include_partition_code.sh to exclude writing partition code to diskrestore.sh for LDL disks
-            listDasdLdl+=( $device )
-            LogPrint "LDL disk added to listDasdLdl:" ${listDasdLdl[@]}
-        fi
-        LogPrint 'dasdfmt:' $device ', blocksize:' $blocksize ', layout:' $layout
-        # dasd format
-        dasdfmt -b $blocksize -d $layout -y $device
-    done < <( grep "^dasdfmt " "$LAYOUT_FILE" )
-}
-
+DISK_MAPPING_HINTS=()
 
 enable_s390_disk() {
+    local keyword device bus len newname
+
     LogPrint "run chccwdev"
-    while read line ; do
-        LogPrint 'dasd channel:' "$line"
-        device=$( echo $line | awk '{ print $4 }' )
-        bus=$( echo $line | awk '{ print $2 }' )
-        channel=$( echo $line | awk '{ print $5 }' )
-        LogPrint 'chccwdev:' $device ', bus:' $bus ', channel:' $channel
-        # dasd channel enable
+    while read len device bus ; do
+        # this while loop must be outside the pipeline so that variables propagate outside
+        # (pipelines run in subshells)
+        LogPrint "Enabling DASD $device with virtual device number $bus"
         chccwdev -e $bus
-    done < <( grep "^dasd_channel " "$LAYOUT_FILE" )
+        newname=$(lsdasd $bus | awk "/$bus/ { print \$3}" )
+        if [ "$newname" != "$device" ]; then
+            LogPrint "original DASD '$device' changed name to '$newname'"
+            is_true "$MIGRATION_MODE" || MIGRATION_MODE='true'
+        fi
+        DISK_MAPPING_HINTS+=( "/dev/$device /dev/$newname" )
+    done < <( grep "^dasd_channel " "$LAYOUT_FILE" ) | sort -k1n -k2 | while read keyword bus device; do
+        # add device name length, so that "dasdb" sorts properly bedore "dasdaa"
+        # we need to create devices in the same order as the kernel orders them (by minor number)
+        # - this increases the chance that they will get identical names
+        echo ${#device} $device $bus
+    done )
 }
 
 # May need to look at $OS_VENDOR also as DASD disk layout is distro specific:
@@ -49,7 +33,6 @@ case $OS_MASTER_VENDOR in
         # "Fedora" also handles Red Hat
         # "Debian" also handles Ubuntu
         enable_s390_disk
-        format_s390_disk
         ;;
     (*)
         LogPrintError "No code for DASD disk device enablement on $OS_MASTER_VENDOR"
