@@ -391,7 +391,7 @@ Log "Saving disks and their partitions"
 
                 # We need to print the dasd_channel line even for ignored devices,
                 # otherwise we could have naming gaps and naming would change when
-                # when recreating layout.
+                # recreating layout.
                 # E.g. if dasda is ignored, and dasdb is not, we would create only dasdb
                 # during recreation, but it would be named dasda.
                 if [ "$dasdstatus" != active ]; then
