@@ -729,7 +729,7 @@ get_dasd_cylinders() {
     local disk_name="${1##*/}" # /some/path/dasda -> dasda
     local dasd_cyls
 
-    dasd_cyls=$(dasdview -i /dev/dasdc | grep cylinders | cut -d ':' -f2 | awk '{print $4}')
+    dasd_cyls=$(dasdview -i /dev/$disk_name | grep cylinders | cut -d ':' -f2 | awk '{print $4}')
     ### Make sure we always return a number
     echo $(( dasd_cyls ))
 }

@@ -364,9 +364,9 @@ Log "Saving disk partitions."
                 devname=$(get_device_name $disk)
                 dasdnum=$( lsdasd | awk "\$3 == \"$blockd\" { print \$1}" )
                 dasdstatus=$( lsdasd | awk "\$3 == \"$blockd\" { print \$2}" )
-                # EKCD or FBA
+                # ECKD or FBA
                 dasdtype=$( lsdasd | awk "\$3 == \"$blockd\" { print \$5}" )
-                if [ "$dasdtype" != EKCD ] && [ "$dasdtype" != FBA ]; then
+                if [ "$dasdtype" != ECKD ] && [ "$dasdtype" != FBA ]; then
                     LogPrint "Type $dasdtype of DASD $blockd unexpected: neither EKCD nor FBA"
                 fi
 
