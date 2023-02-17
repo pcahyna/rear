@@ -17,7 +17,7 @@ unset choices
 choices[0]="Rerun DASD format script ($DASD_FORMAT_CODE)"
 choices[1]="View '$rear_workflow' log file ($RUNTIME_LOGFILE)"
 choices[2]="Edit DASD format script ($DASD_FORMAT_CODE)"
-choices[3]="Show what is currently on the disks ('lsblk' block devices list)"
+choices[3]="Show what is currently on the disks ('lsdasd' device list)"
 choices[4]="View original disk space usage ($original_disk_space_usage_file)"
 choices[5]="Use Relax-and-Recover shell and return back to here"
 choices[6]="Confirm what is currently on the disks and continue '$rear_workflow'"
