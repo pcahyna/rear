@@ -1,4 +1,4 @@
-# LAYOUT_CODE is the script to recreate the dasd formatting (dasdformat.sh).
+# DASD_FORMAT_CODE is the script to recreate the dasd formatting (dasdformat.sh).
 
 local component disk size label junk
 local blocksize layout dasdtype dasdcyls junk2
@@ -7,8 +7,16 @@ local blocksize layout dasdtype dasdcyls junk2
 save_original_file "$DASD_FORMAT_CODE"
 
 # Initialize
-cat <<EOF >"$DASD_FORMAT_CODE"
-#!/bin/bash
+
+echo '#!/bin/bash' >"$DASD_FORMAT_CODE"
+
+# Show the current output of lsdasd, it can be useful for identifying disks
+# (in particular it shows the Linux device name <-> virtual device number mapping,
+# formatted / unformatted status and the number/size of blocks when formatted )
+echo "# Current output of 'lsdasd':" >>"$DASD_FORMAT_CODE"
+lsdasd | sed -e 's/^/# /' >>"$DASD_FORMAT_CODE"
+
+cat <<EOF >>"$DASD_FORMAT_CODE"
 
 LogPrint "Start DASD format restoration."
 
@@ -25,3 +33,12 @@ while read component disk size label junk; do
             LogPrintError "Error producing DASD format code for $disk"
     fi
 done < <(grep "^disk " "$DASD_FORMAT_FILE")
+
+cat <<EOF >>"$DASD_FORMAT_CODE"
+
+set +x
+set +e
+
+LogPrint "DASD(s) formatted."
+
+EOF
