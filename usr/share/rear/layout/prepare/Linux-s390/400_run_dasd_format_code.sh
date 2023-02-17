@@ -1,7 +1,12 @@
+# adapted from 200_run_layout_code.sh
 #
 # Run the DASD format code (dasdformat.sh)
 # again and again until it succeeds or the user aborts.
 #
+
+function lsdasd_output () {
+    lsdasd 1>> >( tee -a "$RUNTIME_LOGFILE" 1>&7 )
+}
 
 rear_workflow="rear $WORKFLOW"
 original_disk_space_usage_file="$VAR_DIR/layout/config/df.txt"
@@ -144,7 +149,7 @@ while true ; do
                 vi $DASD_FORMAT_CODE 0<&6 1>&7 2>&8
                 ;;
             (${choices[3]})
-                LogPrint "This is currently on the disks:"
+                LogPrint "This is the current list of DASDs:"
                 lsdasd_output
                 ;;
             (${choices[4]})
@@ -168,3 +173,7 @@ while true ; do
     done
 # End of the outer while loop:
 done
+
+# Local functions must be 'unset' because bash does not support 'local function ...'
+# cf. https://unix.stackexchange.com/questions/104755/how-can-i-create-a-local-function-in-my-bashrc
+unset -f lsdasd_output
