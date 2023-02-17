@@ -32,7 +32,7 @@ while read component disk size label junk; do
         dasd_format_code "$disk" "$size" "$blocksize" "$layout" "$dasdtype" "$dasdcyls" >> "$DASD_FORMAT_CODE" || \
             LogPrintError "Error producing DASD format code for $disk"
     fi
-done < <(grep "^disk " "$DASD_FORMAT_FILE")
+done < <(grep "^disk " "$LAYOUT_FILE")
 
 cat <<EOF >>"$DASD_FORMAT_CODE"
 
