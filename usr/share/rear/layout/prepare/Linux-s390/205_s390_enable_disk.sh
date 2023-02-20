@@ -16,7 +16,7 @@ enable_s390_disk() {
         newname=$(lsdasd $bus | awk "/$bus/ { print \$3}" )
         if [ "$newname" != "$device" ]; then
             LogPrint "original DASD '$device' changed name to '$newname'"
-            is_true "$MIGRATION_MODE" || MIGRATION_MODE='true'
+            test "$MIGRATION_MODE" || MIGRATION_MODE='true'
         fi
         DISK_MAPPING_HINTS+=( "/dev/$device /dev/$newname" )
     done < <( grep "^dasd_channel " "$LAYOUT_FILE" | sort -k1n -k2 | while read keyword bus device; do
