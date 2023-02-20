@@ -128,7 +128,7 @@ while read keyword orig_device orig_size junk ; do
     else
         candidate_target_device_name="$orig_device"
     fi
-    sysfs_device_name="$( get_sysfs_name "$candidate_device_name" )"
+    sysfs_device_name="$( get_sysfs_name "$candidate_target_device_name" )"
     current_device="/sys/block/$sysfs_device_name"
     if test -e $current_device ; then
         current_size=$( get_disk_size $sysfs_device_name )
