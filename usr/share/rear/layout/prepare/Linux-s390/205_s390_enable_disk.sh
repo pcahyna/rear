@@ -12,7 +12,7 @@ enable_s390_disk() {
         # this while loop must be outside the pipeline so that variables propagate outside
         # (pipelines run in subshells)
         LogPrint "Enabling DASD $device with virtual device number $bus"
-        chccwdev -e $bus
+        chccwdev -e $bus || LogPrintError "Failed to enable $bus"
         newname=$(lsdasd $bus | awk "/$bus/ { print \$3}" )
         if [ "$newname" != "$device" ]; then
             LogPrint "original DASD '$device' changed name to '$newname'"
