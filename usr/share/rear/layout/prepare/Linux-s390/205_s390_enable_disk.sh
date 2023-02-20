@@ -19,12 +19,12 @@ enable_s390_disk() {
             test "$MIGRATION_MODE" || MIGRATION_MODE='true'
         fi
         DISK_MAPPING_HINTS+=( "/dev/$device /dev/$newname" )
-    done < <( grep "^dasd_channel " "$LAYOUT_FILE" | sort -k1n -k2 | while read keyword bus device; do
-        # add device name length, so that "dasdb" sorts properly bedore "dasdaa"
-        # we need to create devices in the same order as the kernel orders them (by minor number)
-        # - this increases the chance that they will get identical names
-        echo ${#device} $device $bus
-    done )
+    done < <( grep "^dasd_channel " "$LAYOUT_FILE" | while read keyword bus device; do
+                  # add device name length, so that "dasdb" sorts properly bedore "dasdaa"
+                  # we need to create devices in the same order as the kernel orders them (by minor number)
+                  # - this increases the chance that they will get identical names
+                  echo ${#device} $device $bus
+                  done | sort -k1n -k2 )
 }
 
 # May need to look at $OS_VENDOR also as DASD disk layout is distro specific:
