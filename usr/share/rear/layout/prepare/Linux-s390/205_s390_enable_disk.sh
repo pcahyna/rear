@@ -12,13 +12,20 @@ enable_s390_disk() {
         # this while loop must be outside the pipeline so that variables propagate outside
         # (pipelines run in subshells)
         LogPrint "Enabling DASD $device with virtual device number $bus"
-        chccwdev -e $bus || LogPrintError "Failed to enable $bus"
-        newname=$(lsdasd $bus | awk "/$bus/ { print \$3}" )
-        if [ "$newname" != "$device" ]; then
-            LogPrint "original DASD '$device' changed name to '$newname'"
-            test "$MIGRATION_MODE" || MIGRATION_MODE='true'
+        if chccwdev -e $bus ; then
+            newname=$(lsdasd $bus | awk "/$bus/ { print \$3}" )
+            if ! test $newname ; then
+                LogPrintError "New device with virtual device number $bus not found among online DASDs"
+                continue
+            fi
+            if [ "$newname" != "$device" ]; then
+                LogPrint "original DASD '$device' changed name to '$newname'"
+                test "$MIGRATION_MODE" || MIGRATION_MODE='true'
+            fi
+            DISK_MAPPING_HINTS+=( "/dev/$device /dev/$newname" )
+        else
+            LogPrintError "Failed to enable $bus"
         fi
-        DISK_MAPPING_HINTS+=( "/dev/$device /dev/$newname" )
     done < <( grep "^dasd_channel " "$LAYOUT_FILE" | while read keyword bus device; do
                   # add device name length, so that "dasdb" sorts properly before "dasdaa"
                   # we need to create devices in the same order as the kernel orders them (by minor number)
