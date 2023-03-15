@@ -23,9 +23,8 @@ fi
 
 ### Prepare a disk for partitioning/general usage.
 create_disk() {
-    local component disk size label junk
-    local blocksize layout dasdtype dasdcyls junk2
-    read component disk size label junk < <(grep "^disk $1 " "$LAYOUT_FILE")
+    local component disk size label extrafields
+    read component disk size label extrafields < <(grep "^disk $1 " "$LAYOUT_FILE")
 
     cat >> "$LAYOUT_CODE" <<EOF
 
@@ -58,8 +57,8 @@ sync
 
 EOF
 
-    # $junk can contain useful DASD-specific fields
-    create_partitions "$disk" "$label" "$junk"
+    # $extrafields can contain useful DASD-specific fields
+    create_partitions "$disk" "$label" "$extrafields"
 
     cat >> "$LAYOUT_CODE" <<EOF
 # Make sure device nodes are visible (eg. in RHEL4)
@@ -87,7 +86,7 @@ create_partitions() {
     local part disk size pstart name junk
     local orig_block_size layout dasdtype dasdcyls junk2
     if [ "$label" == dasd ]; then
-        # dasd has more fields - junk is not junk anymore
+        # dasd has more fields - they are all in $3 now
         read orig_block_size layout dasdtype dasdcyls junk2 <<<$3
     fi
     while read part disk size pstart name junk ; do

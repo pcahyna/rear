@@ -753,7 +753,7 @@ get_dasd_cylinders() {
 }
 
 # Sometimes we know what the new device for the original device should be in a more reliable way
-# than by looking at disk sizes. THis information is called "mapping hints". Let's pass them
+# than by looking at disk sizes. This information is called "mapping hints". Let's pass them
 # to the mapping code using the DISK_MAPPING_HINTS array. Each element of the array has the form
 # "/dev/source /dev/target" (space-separated).
 

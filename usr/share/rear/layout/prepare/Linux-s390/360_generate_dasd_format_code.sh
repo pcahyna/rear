@@ -1,6 +1,6 @@
 # DASD_FORMAT_CODE is the script to recreate the dasd formatting (dasdformat.sh).
 
-local component disk size label junk
+local component disk size label extrafields
 local blocksize layout dasdtype dasdcyls junk2
 
 
@@ -25,7 +25,7 @@ set -x
 
 EOF
 
-while read component disk size label junk; do
+while read component disk size label extrafields; do
     if [ "$label" == dasd ]; then
         # Ignore excluded components.
         # Normally they are removed in 520_exclude_components.sh,
@@ -34,8 +34,8 @@ while read component disk size label junk; do
             Log "Excluding $disk from DASD reformatting."
             continue
         fi
-        # dasd has more fields - junk is not junk anymore
-        read blocksize layout dasdtype dasdcyls junk2 <<<$junk
+        # dasd has more fields - they are all in $extrafields now
+        read blocksize layout dasdtype dasdcyls junk2 <<<$extrafields
         dasd_format_code "$disk" "$size" "$blocksize" "$layout" "$dasdtype" "$dasdcyls" >> "$DASD_FORMAT_CODE" || \
             LogPrintError "Error producing DASD format code for $disk"
     fi
