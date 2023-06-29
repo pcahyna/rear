@@ -6,4 +6,4 @@ framework: beakerlib
 discover:
     how: fmf
     url: https://github.com/pcahyna/rear-testing
-    ref: test-backup-iso-minimal
+    ref: test-backup-iso-minimal-update-to-main
