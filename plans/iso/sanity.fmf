@@ -1,8 +1,6 @@
 summary:
     Sanity tests
 
-framework: beakerlib
-
 discover:
     how: fmf
     url: https://github.com/pcahyna/rear-testing
