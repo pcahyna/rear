@@ -1,5 +1,5 @@
 summary:
-    Sanity tests
+    Backup and restore tests
 
 discover:
     how: fmf
