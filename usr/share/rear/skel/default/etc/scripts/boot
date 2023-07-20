@@ -5,7 +5,7 @@ dmesg -n1
 
 # basic mounts
 mount -t proc -n none /proc
-mount -t sysfs none /sys
+#mount -t sysfs none /sys
 
 if type udevd &>/dev/null && ! type udevinfo &>/dev/null; then
     ### we use udevinfo to filter out old udev versions (<106) that don't
