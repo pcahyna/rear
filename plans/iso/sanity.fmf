@@ -3,5 +3,6 @@ summary:
 
 discover:
     how: fmf
-    url: https://github.com/pcahyna/rear-testing
-    ref: test-backup-iso-updated-to-main-rebased
+    url: https://github.com/pcahyna/rear-integration-tests
+    ref: test-backup-recover
+    path: tests
