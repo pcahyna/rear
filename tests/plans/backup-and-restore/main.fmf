@@ -3,5 +3,6 @@ summary:
 
 discover:
     how: fmf
-    url: https://github.com/rear/rear-integration-tests
+    url: https://github.com/pcahyna/rear-integration-tests
+    ref: debug-c8s-oom
     path: tests
