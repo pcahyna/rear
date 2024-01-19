@@ -52,7 +52,11 @@ is_true $NOBOOTLOADER || return 0
 
 # For UEFI systems with grub2 we should use efibootmgr instead,
 # cf. finalize/Linux-i386/670_run_efibootmgr.sh
-is_true $USING_UEFI_BOOTLOADER && return
+# but if BOOTLOADER is explicitly set to GRUB2, we are on a hybrid (BIOS/UEFI)
+# boot system and we need to install GRUB to MBR as well
+if is_true $USING_UEFI_BOOTLOADER && [ "GRUB2" != "$BOOTLOADER" ] ; then
+   return 0
+fi
 
 # Only for GRUB2 - GRUB Legacy will be handled by its own script.
 # GRUB2 is detected by testing for grub-probe or grub2-probe which does not exist in GRUB Legacy.
