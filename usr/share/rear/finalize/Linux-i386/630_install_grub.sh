@@ -15,8 +15,12 @@
 # (then $NOBOOTLOADER is not a true value cf. finalize/default/010_prepare_checks.sh):
 is_true $NOBOOTLOADER || return 0
 
-# For UEFI systems with grub legacy with should use efibootmgr instead:
-is_true $USING_UEFI_BOOTLOADER && return
+# For UEFI systems with grub legacy with should use efibootmgr instead,
+# but if BOOTLOADER is explicitly set to GRUB, we are on a hybrid (BIOS/UEFI)
+# boot system and we need to install GRUB to MBR as well
+if is_true $USING_UEFI_BOOTLOADER && [ "GRUB" != "$BOOTLOADER" ] ; then
+    return 0
+fi
 
 # If the BOOTLOADER variable (read by finalize/default/010_prepare_checks.sh)
 # is not "GRUB" (which means GRUB Legacy) skip this script (which is only for GRUB Legacy)
