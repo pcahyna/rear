@@ -536,7 +536,7 @@ function get_root_disk_UUID {
 # (both GRUB 2 and GRUB Legacy have the string "GRUB" in their MBR).
 function is_grub2_installed () {
     if type -p grub-probe >&2 || type -p grub2-probe >&2 ; then
-        LogPrint "GRUB 2 is installed (grub-probe or grub2-probe exist)."
+        Log "GRUB 2 is installed (grub-probe or grub2-probe exist)."
         return 0
     else
         return 1
