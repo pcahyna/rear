@@ -555,13 +555,8 @@ function is_disk_grub_candidate () {
     is_disk_a_pv "$disk" && return 1
 
     label="$( get_disklabel_type "$disk" )" || return 1
-    # I (pcahyna) don't know whether the SUSE-specific 'gpt_sync_mbr' partition scheme
-    # supports GRUB installation without a bios_grub partition.
-    # https://bugzilla.opensuse.org/show_bug.cgi?id=220839 though
-    # speaks of using a GPT-unaware GRUB and dual-boot with MacOS as the motivation
-    # for supporting this scheme, and shows examples without a bios_grub partition.
-    # I thus assume that it does not need a bios_grub partition
-    # to support GRUB for BIOS booting.
+    # We don't care about the SUSE-specific 'gpt_sync_mbr' partition scheme
+    # anymore: https://github.com/rear/rear/pull/3145#discussion_r1481388431
     if [ "$label" == gpt ] ; then
         # GPT needs a special BIOS boot partition to store GRUB (BIOS version).
         # Let's try to find it. It can be recognized as having the bios_grub flag.
