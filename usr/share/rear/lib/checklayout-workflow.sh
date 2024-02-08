@@ -15,6 +15,10 @@ function WORKFLOW_checklayout () {
 
     SourceStage "layout/precompare"
 
+    # layout code needs to know whether we are using UEFI (USING_UEFI_BOOTLOADER)
+    # as it also detects the bootloader in use ( layout/save/default/445_guess_bootloader.sh )
+    Source $SHARE_DIR/prep/default/320_include_uefi_env.sh
+
     # In case of e.g. BACKUP_URL=file:///mybackup/ automatically exclude the matching component 'fs:/mybackup'
     # otherwise 'rear checklayout' would always detect a changed layout with BACKUP_URL=file:///...
     # because during 'rear mkrescue/mkbackup' such a component was automatically excluded this way
