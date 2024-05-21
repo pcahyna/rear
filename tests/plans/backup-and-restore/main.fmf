@@ -3,6 +3,6 @@ summary:
 
 discover:
     how: fmf
-    url: https://github.com/pcahyna/rear-testing
+    url: https://github.com/pcahyna/rear-integration-tests
     ref: debug-fedora-boot
     path: tests
