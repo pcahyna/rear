@@ -18,9 +18,11 @@ jobs:
   trigger: pull_request
   metadata:
   targets:
-  - fedora-all
-  - centos-stream-8-x86_64
+  - fedora-39-x86_64
+  - fedora-40-x86_64
+  - fedora-rawhide-x86_64
   - centos-stream-9-x86_64
+  - centos-stream-10-x86_64
 specfile_path: packaging/rpm/rear.spec
 files_to_sync:
 - .packit.yaml
