@@ -11,11 +11,31 @@ jobs:
 - job: tests
   trigger: pull_request
   metadata:
+  identifier: f39
   targets:
   - fedora-39-x86_64
+- job: tests
+  trigger: pull_request
+  metadata:
+  identifier: f40
+  targets:
   - fedora-40-x86_64
+- job: tests
+  trigger: pull_request
+  metadata:
+  identifier: rawhide
+  targets:
   - fedora-rawhide-x86_64
+- job: tests
+  trigger: pull_request
+  metadata:
+  identifier: c9s
+  targets:
   - centos-stream-9-x86_64
+- job: tests
+  trigger: pull_request
+  metadata:
+  targets:
   - centos-stream-10-x86_64
 specfile_path: packaging/rpm/rear.spec
 files_to_sync:
