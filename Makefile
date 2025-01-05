@@ -7,7 +7,7 @@ SHELL = bash
 # disable parallel execution of make
 .NOTPARALLEL:
 
-DESTDIR =
+export DESTDIR =
 OFFICIAL =
 DIST_CONTENT = COPYING  doc  etc  MAINTAINERS  Makefile  packaging  README.md  tests  tools  usr
 
@@ -63,12 +63,12 @@ else
 endif
 
 
-prefix = /usr
-sysconfdir = /etc
-sbindir = $(prefix)/sbin
-datadir = $(prefix)/share
-mandir = $(datadir)/man
-localstatedir = /var
+export prefix = /usr
+export sysconfdir = /etc
+export sbindir = $(prefix)/sbin
+export datadir = $(prefix)/share
+export mandir = $(datadir)/man
+export localstatedir = /var
 
 specfile = packaging/rpm/$(name).spec
 dscfile = packaging/debian/$(name).dsc
@@ -178,6 +178,7 @@ install-data:
 	rm -Rf $(DESTDIR)$(datadir)/rear
 	install -d -m0755 $(DESTDIR)$(datadir)/rear/
 	cp -a usr/share/rear/. $(DESTDIR)$(datadir)/rear/
+	$(MAKE) -C usr/share/rear/skel install
 	-find $(DESTDIR)$(datadir)/rear/ -name '.gitignore' -exec rm -rf {} \; &>/dev/null
 
 install-var:
