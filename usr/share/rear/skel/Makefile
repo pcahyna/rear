@@ -9,7 +9,7 @@ datadir ?= /usr/share
 # (like --mode= or --owner arguments to tar).
 # Creating the archives dynamically from the source tree avoids having binary files
 # (.tar.gz) in the source tree.
-archivedirs = GNU/Linux
+archivedirs = GNU/Linux Debian/default
 # Names of the archive dirs when copied to the install destination.
 # We do not want them there.
 destarchivedirs := $(addprefix $(DESTDIR)$(datadir)/rear/skel/,$(archivedirs))
